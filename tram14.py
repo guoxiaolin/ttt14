@@ -3,6 +3,7 @@
 import datetime
 # from datetime import datetime
 from time import strftime
+import itertools
 
 class tram14:
 
@@ -66,6 +67,8 @@ class tram14:
         
         # convert hour and minute to datatime.time()
         data = [datetime.datetime.strptime(line[0]+':'+x, '%H:%M').time() for line in data for x in line[1:]]
+        data = sorted(data)
+
         return data
 
     def time_left(self, current_time):
@@ -81,12 +84,11 @@ class tram14:
 
         hour_minute = str(current_time.hour) + ':' + str(current_time.minute)
         hour_minute = datetime.datetime.strptime(hour_minute, '%H:%M').time()
-        idx = next(i for i,v in enumerate(L) if v > hour_minute)
-        if (idx >= len(L)):
-            idx = 0
+
+        idx = next(itertools.chain(iter(i for i,v in enumerate(L) if v > hour_minute), [0]))
 
         dt1 = datetime.timedelta(hours=L[idx].hour, minutes=L[idx].minute, seconds=L[idx].second, microseconds=L[idx].microsecond)
         dt2 = datetime.timedelta(hours=hour_minute.hour, minutes=hour_minute.minute, seconds=hour_minute.second, microseconds=hour_minute.microsecond)
         diff = dt1 - dt2
 
-        return (diff.seconds//60)%60
+        return diff.seconds//60
