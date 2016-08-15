@@ -1,3 +1,5 @@
+# this file contains the dot matrix description of the font smalltalk
+
 font_smalltalk = []
 
 
